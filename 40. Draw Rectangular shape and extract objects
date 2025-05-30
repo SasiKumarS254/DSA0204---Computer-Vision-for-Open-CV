@@ -1,0 +1,50 @@
+import cv2
+
+# Global variables
+drawing = False  # True if mouse is pressed
+ix, iy = -1, -1
+ex, ey = -1, -1
+img = cv2.imread(r'R:\Whats Up\WhatsApp Image 2025-05-02 at 18.22.37_ea1e846a.jpg')
+if img is None:
+    print("Error loading image")
+    exit()
+img_copy = img.copy()
+
+def draw_rectangle(event, x, y, flags, param):
+    global ix, iy, ex, ey, drawing, img_copy
+
+    if event == cv2.EVENT_LBUTTONDOWN:
+        drawing = True
+        ix, iy = x, y
+        ex, ey = x, y
+
+    elif event == cv2.EVENT_MOUSEMOVE:
+        if drawing:
+            ex, ey = x, y
+            img_copy = img.copy()
+            cv2.rectangle(img_copy, (ix, iy), (ex, ey), (0, 255, 0), 2)
+
+    elif event == cv2.EVENT_LBUTTONUP:
+        drawing = False
+        ex, ey = x, y
+        cv2.rectangle(img_copy, (ix, iy), (ex, ey), (0, 255, 0), 2)
+
+        # Crop the selected ROI
+        x1, y1 = min(ix, ex), min(iy, ey)
+        x2, y2 = max(ix, ex), max(iy, ey)
+        roi = img[y1:y2, x1:x2]
+
+        # Show the cropped object
+        cv2.imshow('Cropped Object', roi)
+
+
+cv2.namedWindow('Image')
+cv2.setMouseCallback('Image', draw_rectangle)
+
+while True:
+    cv2.imshow('Image', img_copy)
+    key = cv2.waitKey(1) & 0xFF
+    if key == 27:  # ESC to exit
+        break
+
+cv2.destroyAllWindows()
