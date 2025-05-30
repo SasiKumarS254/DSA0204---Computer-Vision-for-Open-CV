@@ -1,0 +1,29 @@
+import cv2
+import numpy as np
+
+# Load the image in grayscale
+image = cv2.imread(r'R:\Whats Up\WhatsApp Image 2025-05-02 at 18.22.37_ea1e846a.jpg', cv2.IMREAD_GRAYSCALE)
+
+if image is None:
+    print("Error: Could not load image.")
+    exit()
+
+# Define extended Laplacian kernel including diagonals
+laplacian_kernel = np.array([
+    [1,  1, 1],
+    [1, -8, 1],
+    [1,  1, 1]
+], dtype=np.float32)
+
+# Apply the Laplacian kernel (2D filtering)
+laplacian_filtered = cv2.filter2D(image, cv2.CV_64F, laplacian_kernel)
+
+# Subtract the Laplacian result from the original image to sharpen
+sharpened = cv2.convertScaleAbs(image - laplacian_filtered)
+
+# Display the results
+cv2.imshow("Original Image", image)
+cv2.imshow("Sharpened with Diagonal Laplacian", sharpened)
+
+cv2.waitKey(0)
+cv2.destroyAllWindows()
