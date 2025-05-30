@@ -1,0 +1,29 @@
+import cv2
+import numpy as np
+
+# Load the image in grayscale
+image = cv2.imread(r'R:\Whats Up\WhatsApp Image 2025-05-02 at 18.22.37_ea1e846a.jpg', cv2.IMREAD_GRAYSCALE)
+
+if image is None:
+    print("Error: Could not load image.")
+    exit()
+
+# Define Laplacian kernel with negative center
+laplacian_kernel = np.array([
+    [0,  1, 0],
+    [1, -4, 1],
+    [0,  1, 0]
+], dtype=np.float32)
+
+# Apply the Laplacian kernel (2D convolution)
+laplacian_filtered = cv2.filter2D(image, ddepth=cv2.CV_64F, kernel=laplacian_kernel)
+
+# Subtract the Laplacian (i.e., sharpen = original - Laplacian)
+sharpened = cv2.convertScaleAbs(image - laplacian_filtered)
+
+# Display the results
+cv2.imshow("Original Image", image)
+cv2.imshow("Sharpened Image", sharpened)
+
+cv2.waitKey(0)
+cv2.destroyAllWindows()
