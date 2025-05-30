@@ -1,0 +1,51 @@
+import cv2
+import time
+
+# Step 1: Capture video from webcam and save it
+cap = cv2.VideoCapture(0)  # 0 is the default webcam
+
+# Define codec and create VideoWriter to save video
+fourcc = cv2.VideoWriter_fourcc(*'XVID')
+out = cv2.VideoWriter('captured_video.avi', fourcc, 20.0, (640, 480))
+
+print("Recording video. Press 'q' to stop...")
+while cap.isOpened():
+    ret, frame = cap.read()
+    if not ret:
+        break
+
+    out.write(frame)  # Save frame to file
+    cv2.imshow('Webcam Live', frame)
+
+    if cv2.waitKey(1) & 0xFF == ord('q'):
+        break
+
+cap.release()
+out.release()
+cv2.destroyAllWindows()
+
+# Step 2: Function to play video at given speed
+def play_video(file_path, speed_multiplier):
+    cap = cv2.VideoCapture(file_path)
+    if not cap.isOpened():
+        print("Error: Cannot open the video.")
+        return
+
+    fps = cap.get(cv2.CAP_PROP_FPS)
+    delay = int(1000 / (fps * speed_multiplier))  # ms between frames
+
+    print(f"Playing video at {speed_multiplier}x speed. Press 'q' to exit.")
+    while cap.isOpened():
+        ret, frame = cap.read()
+        if not ret:
+            break
+        cv2.imshow(f'Playback {speed_multiplier}x', frame)
+        if cv2.waitKey(delay) & 0xFF == ord('q'):
+            break
+    cap.release()
+    cv2.destroyAllWindows()
+
+# Step 3: Play captured video in different speeds
+play_video('captured_video.avi', 1.0)  # Normal speed
+play_video('captured_video.avi', 0.5)  # Slow motion
+play_video('captured_video.avi', 2.0)  # Fast motion
