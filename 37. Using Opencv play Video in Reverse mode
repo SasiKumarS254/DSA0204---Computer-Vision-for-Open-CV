@@ -1,0 +1,27 @@
+import cv2
+
+# Open video file
+cap = cv2.VideoCapture(r'R:\Culturals\video_20250510_201257.mp4')
+
+if not cap.isOpened():
+    print("Error opening video file")
+    exit()
+
+# Read all frames and store in a list
+frames = []
+while True:
+    ret, frame = cap.read()
+    if not ret:
+        break
+    frames.append(frame)
+
+cap.release()
+
+# Play the video in reverse
+for frame in reversed(frames):
+    cv2.imshow('Reverse Video', frame)
+    # Adjust delay for speed; 30 ms ~ 33 FPS video
+    if cv2.waitKey(30) & 0xFF == ord('q'):
+        break
+
+cv2.destroyAllWindows()
