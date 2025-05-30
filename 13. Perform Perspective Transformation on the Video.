@@ -1,0 +1,56 @@
+import cv2
+import numpy as np
+
+# Open webcam (use 0 for default camera)
+cap = cv2.VideoCapture(0)
+
+if not cap.isOpened():
+    print("Error: Could not access webcam.")
+    exit()
+
+# Read the first frame to get dimensions
+ret, frame = cap.read()
+if not ret:
+    print("Error: Couldn't read frame.")
+    cap.release()
+    exit()
+
+height, width = frame.shape[:2]
+
+# Define 4 source points (rectangle within the frame)
+src_points = np.float32([
+    [100, 100],
+    [width - 100, 100],
+    [100, height - 100],
+    [width - 100, height - 100]
+])
+
+# Define 4 destination points (stretch to full frame)
+dst_points = np.float32([
+    [0, 0],
+    [width - 1, 0],
+    [0, height - 1],
+    [width - 1, height - 1]
+])
+
+# Calculate perspective transformation matrix
+perspective_matrix = cv2.getPerspectiveTransform(src_points, dst_points)
+
+while True:
+    ret, frame = cap.read()
+    if not ret:
+        break
+
+    # Apply perspective transformation
+    warped_frame = cv2.warpPerspective(frame, perspective_matrix, (width, height))
+
+    # Show original and transformed frames side by side
+    cv2.imshow('Original Video', frame)
+    cv2.imshow('Perspective Transformed Video', warped_frame)
+
+    if cv2.waitKey(1) & 0xFF == ord('q'):
+        break
+
+# Cleanup
+cap.release()
+cv2.destroyAllWindows()
