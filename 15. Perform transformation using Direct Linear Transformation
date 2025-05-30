@@ -1,0 +1,54 @@
+import numpy as np
+import cv2
+
+def compute_homography_dlt(src_pts, dst_pts):
+    """
+    Computes the homography matrix using Direct Linear Transformation (DLT).
+    src_pts and dst_pts must be Nx2 numpy arrays of corresponding points.
+    """
+
+    assert src_pts.shape[0] == dst_pts.shape[0] and src_pts.shape[0] >= 4, \
+        "There must be at least four corresponding points"
+
+    N = src_pts.shape[0]
+    A = []
+
+    for i in range(N):
+        x, y = src_pts[i][0], src_pts[i][1]
+        x_prime, y_prime = dst_pts[i][0], dst_pts[i][1]
+
+        A.append([-x, -y, -1, 0, 0, 0, x * x_prime, y * x_prime, x_prime])
+        A.append([0, 0, 0, -x, -y, -1, x * y_prime, y * y_prime, y_prime])
+
+    A = np.array(A)
+
+    # Perform SVD
+    U, S, Vt = np.linalg.svd(A)
+    H = Vt[-1].reshape(3, 3)
+
+    # Normalize so that H[2,2] = 1
+    return H / H[2, 2]
+
+# Load image
+image = cv2.imread(r'R:\Whats Up\WhatsApp Image 2025-05-02 at 18.22.37_ea1e846a.jpg')  # Replace with your image path
+if image is None:
+    print("Image not found")
+    exit()
+
+h, w = image.shape[:2]
+
+# Define 4 corresponding points in source and destination
+src_pts = np.array([[100, 100], [w - 100, 100], [100, h - 100], [w - 100, h - 100]], dtype=np.float32)
+dst_pts = np.array([[0, 0], [w - 1, 0], [0, h - 1], [w - 1, h - 1]], dtype=np.float32)
+
+# Compute homography using DLT
+H = compute_homography_dlt(src_pts, dst_pts)
+
+# Apply transformation
+warped = cv2.warpPerspective(image, H, (w, h))
+
+# Display result
+cv2.imshow("Original Image", image)
+cv2.imshow("DLT Warped Image", warped)
+cv2.waitKey(0)
+cv2.destroyAllWindows()
