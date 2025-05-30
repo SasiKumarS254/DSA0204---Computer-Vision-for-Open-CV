@@ -1,0 +1,28 @@
+import cv2
+
+# Load the original image
+image = cv2.imread(r'R:\Whats Up\WhatsApp Image 2025-05-02 at 18.22.37_ea1e846a.jpg')
+if image is None:
+    print("Error: Could not load image.")
+    exit()
+
+# Define the watermark text and settings
+text = "Naruto"
+font = cv2.FONT_HERSHEY_SIMPLEX
+position = (10, image.shape[0] - 10)  # Bottom-left corner
+font_scale = 1
+color = (255, 255, 255)  # White text
+thickness = 2
+opacity = 0.5
+
+# Create a copy to draw on
+overlay = image.copy()
+cv2.putText(overlay, text, position, font, font_scale, color, thickness)
+
+# Blend the overlay with the original image
+watermarked = cv2.addWeighted(overlay, opacity, image, 1 - opacity, 0)
+
+# Display the result
+cv2.imshow("Watermarked Image", watermarked)
+cv2.waitKey(0)
+cv2.destroyAllWindows()
