@@ -1,0 +1,26 @@
+import cv2
+import numpy as np
+
+# Load the image (can be grayscale or color)
+image = cv2.imread(r'R:\Whats Up\WhatsApp Image 2025-05-02 at 18.22.37_ea1e846a.jpg')
+if image is None:
+    print("Error: Could not load image.")
+    exit()
+
+# Step 1: Blur the image
+blurred = cv2.GaussianBlur(image, (5, 5), sigmaX=1.0)
+
+# Step 2: Create mask by subtracting blurred from original
+mask = cv2.subtract(image, blurred)
+
+# Step 3: Add mask to the original image to sharpen
+# Adjust alpha to control the strength of sharpening
+alpha = 1.5  # Can be 1.0 to 2.0 for stronger sharpening
+sharpened = cv2.addWeighted(image, 1.0 + alpha, blurred, -alpha, 0)
+
+# Display the images
+cv2.imshow("Original Image", image)
+cv2.imshow("Sharpened (Unsharp Masking)", sharpened)
+
+cv2.waitKey(0)
+cv2.destroyAllWindows()
