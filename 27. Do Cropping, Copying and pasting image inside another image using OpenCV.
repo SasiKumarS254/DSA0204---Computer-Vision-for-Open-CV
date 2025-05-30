@@ -1,0 +1,31 @@
+import cv2
+
+# Load the main image
+image1 = cv2.imread(r'R:\Whats Up\WhatsApp Image 2025-05-02 at 18.22.37_ea1e846a.jpg')
+if image1 is None:
+    print("Error: Could not load image.")
+    exit()
+
+# Step 1: Crop a region from image1
+# Define region of interest (ROI): [y1:y2, x1:x2]
+roi = image1[100:200, 150:300]  # Adjust these values based on your image
+
+# Step 2: Load another image (optional, or use image1 again)
+image2 = cv2.imread(r'R:\Whats Up\WhatsApp Image 2025-05-02 at 19.06.36_7fbfca8a.jpg')  # Optional second image
+if image2 is None:
+    image2 = image1.copy()  # Use same image if second one not found
+
+# Step 3: Resize image2 if needed to match dimensions for pasting
+if image2.shape[0] < roi.shape[0] + 10 or image2.shape[1] < roi.shape[1] + 10:
+    image2 = cv2.resize(image2, (max(image2.shape[1], roi.shape[1] + 20), 
+                                 max(image2.shape[0], roi.shape[0] + 20)))
+
+# Step 4: Paste cropped ROI into another location (e.g., top-left corner of image2)
+image2[10:10+roi.shape[0], 10:10+roi.shape[1]] = roi
+
+# Display results
+cv2.imshow("Original Image", image1)
+cv2.imshow("Modified Image with Cropped ROI Pasted", image2)
+
+cv2.waitKey(0)
+cv2.destroyAllWindows()
