@@ -1,0 +1,41 @@
+import cv2
+import numpy as np
+
+# Load image
+image = cv2.imread(r'R:\Whats Up\WhatsApp Image 2025-05-02 at 18.22.37_ea1e846a.jpg')  # Replace with your image path
+
+if image is None:
+    print("Error: Could not load image.")
+    exit()
+
+# Image dimensions
+rows, cols = image.shape[:2]
+
+# Define 4 source points (corners of the region to transform)
+src_points = np.float32([
+    [50, 50],     # Top-left
+    [cols - 50, 50],    # Top-right
+    [50, rows - 50],    # Bottom-left
+    [cols - 50, rows - 50]  # Bottom-right
+])
+
+# Define 4 destination points (desired output positions)
+dst_points = np.float32([
+    [0, 0],
+    [cols - 1, 0],
+    [0, rows - 1],
+    [cols - 1, rows - 1]
+])
+
+# Compute the perspective transformation matrix
+perspective_matrix = cv2.getPerspectiveTransform(src_points, dst_points)
+
+# Apply the perspective transformation
+warped_image = cv2.warpPerspective(image, perspective_matrix, (cols, rows))
+
+# Show the result
+cv2.imshow('Original Image', image)
+cv2.imshow('Perspective Transformed Image', warped_image)
+
+cv2.waitKey(0)
+cv2.destroyAllWindows()
