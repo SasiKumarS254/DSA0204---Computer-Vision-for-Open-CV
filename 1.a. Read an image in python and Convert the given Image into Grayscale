@@ -1,0 +1,11 @@
+from PIL import Image
+
+# Open the image
+image = Image.open(r'R:\Whats Up\WhatsApp Image 2025-05-02 at 19.06.36_7fbfca8a.jpg')
+
+# Convert to grayscale
+gray_image = image.convert('L')
+
+# Save or show the image
+gray_image.save('grayscale_image.jpg')
+gray_image.show()
