@@ -1,0 +1,29 @@
+import cv2
+import numpy as np
+
+# Load the image
+image = cv2.imread(r'R:\Whats Up\WhatsApp Image 2025-05-02 at 18.22.37_ea1e846a.jpg')  # Replace with your image path
+
+if image is None:
+    print("Error: Could not load image.")
+    exit()
+
+# Define the translation values
+tx = 100  # Shift right by 100 pixels
+ty = 50   # Shift down by 50 pixels
+
+# Create the translation matrix
+translation_matrix = np.float32([[1, 0, tx], [0, 1, ty]])
+
+# Get the image dimensions
+height, width = image.shape[:2]
+
+# Apply the translation
+translated_image = cv2.warpAffine(image, translation_matrix, (width, height))
+
+# Show the original and translated image
+cv2.imshow('Original Image', image)
+cv2.imshow('Translated Image', translated_image)
+
+cv2.waitKey(0)
+cv2.destroyAllWindows()
