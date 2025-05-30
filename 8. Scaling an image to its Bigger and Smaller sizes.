@@ -1,0 +1,28 @@
+import cv2
+
+# Load image
+image = cv2.imread(r'R:\Whats Up\WhatsApp Image 2025-05-02 at 18.22.37_ea1e846a.jpg')  # Replace with your image path
+
+# Check if image is loaded
+if image is None:
+    print("Error: Could not load image.")
+    exit()
+
+# Get original dimensions
+height, width = image.shape[:2]
+
+# Scale factors
+scale_up = 1.5   # 150% size
+scale_down = 0.5 # 50% size
+
+# Resize images
+bigger = cv2.resize(image, (int(width * scale_up), int(height * scale_up)), interpolation=cv2.INTER_LINEAR)
+smaller = cv2.resize(image, (int(width * scale_down), int(height * scale_down)), interpolation=cv2.INTER_AREA)
+
+# Display original and resized images
+cv2.imshow('Original Image', image)
+cv2.imshow('Scaled Up (Bigger)', bigger)
+cv2.imshow('Scaled Down (Smaller)', smaller)
+
+cv2.waitKey(0)
+cv2.destroyAllWindows()
