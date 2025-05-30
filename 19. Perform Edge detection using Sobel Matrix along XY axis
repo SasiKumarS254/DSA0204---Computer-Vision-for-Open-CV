@@ -1,0 +1,26 @@
+import cv2
+import numpy as np
+
+# Load the image in grayscale
+image = cv2.imread(r'R:\Whats Up\WhatsApp Image 2025-05-02 at 18.22.37_ea1e846a.jpg', cv2.IMREAD_GRAYSCALE)
+
+if image is None:
+    print("Error: Could not load image.")
+    exit()
+
+# Sobel gradients along X and Y
+sobel_x = cv2.Sobel(image, cv2.CV_64F, 1, 0, ksize=3)
+sobel_y = cv2.Sobel(image, cv2.CV_64F, 0, 1, ksize=3)
+
+# Combine gradients: edge magnitude = sqrt(sobel_x² + sobel_y²)
+sobel_combined = np.sqrt(sobel_x**2 + sobel_y**2)
+
+# Convert to 8-bit for display
+sobel_combined = np.uint8(np.clip(sobel_combined, 0, 255))
+
+# Display results
+cv2.imshow("Original Image", image)
+cv2.imshow("Sobel Combined (XY Edges)", sobel_combined)
+
+cv2.waitKey(0)
+cv2.destroyAllWindows()
