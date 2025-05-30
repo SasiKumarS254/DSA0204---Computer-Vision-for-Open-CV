@@ -1,0 +1,32 @@
+import cv2
+
+# Load the image
+image = cv2.imread(r'R:\Whats Up\WhatsApp Image 2025-05-02 at 18.22.37_ea1e846a.jpg')  # Replace with your image path
+
+if image is None:
+    print("Error: Image not found.")
+    exit()
+
+# Get image dimensions
+(h, w) = image.shape[:2]
+center = (w // 2, h // 2)
+
+# Define rotation angles
+angle_cw = -90   # Clockwise rotation
+angle_ccw = 90   # Counter-clockwise rotation
+
+# Rotation matrices
+M_cw = cv2.getRotationMatrix2D(center, angle_cw, 1.0)
+M_ccw = cv2.getRotationMatrix2D(center, angle_ccw, 1.0)
+
+# Perform the rotations
+rotated_cw = cv2.warpAffine(image, M_cw, (w, h))
+rotated_ccw = cv2.warpAffine(image, M_ccw, (w, h))
+
+# Display the results
+cv2.imshow("Original Image", image)
+cv2.imshow("Rotated Clockwise", rotated_cw)
+cv2.imshow("Rotated Counter-Clockwise", rotated_ccw)
+
+cv2.waitKey(0)
+cv2.destroyAllWindows()
