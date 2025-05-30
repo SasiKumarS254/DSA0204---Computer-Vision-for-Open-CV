@@ -1,0 +1,43 @@
+import cv2
+
+# Path to your video file
+video_path = r'R:\Whats Up\WhatsApp Video 2025-05-08 at 10.04.06_c867c33d.mp4'
+
+# Open the video
+cap = cv2.VideoCapture(video_path)
+
+if not cap.isOpened():
+    print("Error: Cannot open video file.")
+    exit()
+
+# Get the default FPS of the video
+fps = cap.get(cv2.CAP_PROP_FPS)
+
+# Function to play video at given speed multiplier
+def play_video(speed_multiplier):
+    cap.set(cv2.CAP_PROP_POS_FRAMES, 0)  # Reset video to the first frame
+    delay = int(1000 / (fps * speed_multiplier))  # Adjust delay for speed
+
+    while cap.isOpened():
+        ret, frame = cap.read()
+        if not ret:
+            break
+        cv2.imshow(f"Video x{speed_multiplier}", frame)
+        if cv2.waitKey(delay) & 0xFF == ord('q'):
+            break
+    cv2.destroyAllWindows()
+
+# Normal playback
+print("Playing at normal speed...")
+play_video(1.0)
+
+# Slow motion (0.5x speed)
+print("Playing in slow motion (0.5x)...")
+play_video(0.5)
+
+# Fast motion (2x speed)
+print("Playing in fast motion (2x)...")
+play_video(2.0)
+
+# Release video
+cap.release()
