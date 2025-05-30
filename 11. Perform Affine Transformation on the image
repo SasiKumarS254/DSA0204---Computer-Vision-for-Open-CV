@@ -1,0 +1,31 @@
+import cv2
+import numpy as np
+
+# Load image
+image = cv2.imread(r'R:\Whats Up\WhatsApp Image 2025-05-02 at 18.22.37_ea1e846a.jpg')  # Replace with your image path
+
+if image is None:
+    print("Error: Could not load image.")
+    exit()
+
+# Get the image shape
+rows, cols = image.shape[:2]
+
+# Define 3 source points (from the original image)
+src_points = np.float32([[50, 50], [200, 50], [50, 200]])
+
+# Define 3 destination points (how you want to transform the image)
+dst_points = np.float32([[10, 100], [200, 50], [100, 250]])
+
+# Get the Affine Transform matrix
+affine_matrix = cv2.getAffineTransform(src_points, dst_points)
+
+# Apply the Affine Transformation
+affine_transformed = cv2.warpAffine(image, affine_matrix, (cols, rows))
+
+# Display the images
+cv2.imshow('Original Image', image)
+cv2.imshow('Affine Transformed Image', affine_transformed)
+
+cv2.waitKey(0)
+cv2.destroyAllWindows()
