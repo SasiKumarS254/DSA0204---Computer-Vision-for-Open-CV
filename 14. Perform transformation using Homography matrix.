@@ -1,0 +1,41 @@
+import cv2
+import numpy as np
+
+# Load the image
+image = cv2.imread(r'R:\Whats Up\WhatsApp Image 2025-05-02 at 18.22.37_ea1e846a.jpg')  # Replace with your image path
+
+if image is None:
+    print("Error: Could not load image.")
+    exit()
+
+# Image size
+h, w = image.shape[:2]
+
+# Define source points (points on the original image)
+src_pts = np.float32([
+    [100, 100],
+    [w - 100, 100],
+    [100, h - 100],
+    [w - 100, h - 100]
+])
+
+# Define destination points (desired warped perspective)
+dst_pts = np.float32([
+    [0, 0],
+    [w - 1, 0],
+    [0, h - 1],
+    [w - 1, h - 1]
+])
+
+# Compute the homography matrix
+H, status = cv2.findHomography(src_pts, dst_pts)
+
+# Warp the image using the homography matrix
+warped_image = cv2.warpPerspective(image, H, (w, h))
+
+# Display original and warped image
+cv2.imshow('Original Image', image)
+cv2.imshow('Warped with Homography', warped_image)
+
+cv2.waitKey(0)
+cv2.destroyAllWindows()
