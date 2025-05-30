@@ -1,0 +1,23 @@
+import cv2
+import numpy as np
+
+# Load the image in grayscale
+image = cv2.imread(r'R:\Whats Up\WhatsApp Image 2025-05-02 at 18.22.37_ea1e846a.jpg', cv2.IMREAD_GRAYSCALE)
+
+if image is None:
+    print("Error: Could not load image.")
+    exit()
+
+# Apply Sobel operator along the Y axis
+# Parameters: src, ddepth, dx, dy, ksize
+sobel_y = cv2.Sobel(image, cv2.CV_64F, 0, 1, ksize=3)
+
+# Convert the result to 8-bit image for proper display
+sobel_y_abs = cv2.convertScaleAbs(sobel_y)
+
+# Show the original and Sobel Y images
+cv2.imshow("Original Image", image)
+cv2.imshow("Sobel Y (Horizontal Edges)", sobel_y_abs)
+
+cv2.waitKey(0)
+cv2.destroyAllWindows()
