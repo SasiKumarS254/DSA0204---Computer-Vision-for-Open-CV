@@ -1,0 +1,26 @@
+import cv2
+import numpy as np
+
+# Load image in grayscale
+image = cv2.imread(r'R:\Whats Up\WhatsApp Image 2025-05-02 at 18.22.37_ea1e846a.jpg', cv2.IMREAD_GRAYSCALE)
+if image is None:
+    print("Error: Could not load image.")
+    exit()
+
+# Define Laplacian kernel for boundary detection
+laplacian_kernel = np.array([
+    [0, -1,  0],
+    [-1,  4, -1],
+    [0, -1,  0]
+], dtype=np.float32)
+
+# Apply convolution using the kernel
+boundary = cv2.filter2D(image, cv2.CV_64F, laplacian_kernel)
+boundary = cv2.convertScaleAbs(boundary)
+
+# Display the boundary-detected image
+cv2.imshow("Original Image", image)
+cv2.imshow("Image Boundaries (Laplacian Kernel)", boundary)
+
+cv2.waitKey(0)
+cv2.destroyAllWindows()
