@@ -1,0 +1,28 @@
+import cv2
+
+# Load images
+img1 = cv2.imread(r'R:\Whats Up\WhatsApp Image 2025-05-02 at 18.22.37_ea1e846a.jpg', 0)  # Reference watch image (grayscale)
+img2 = cv2.imread(r'R:\Whats Up\WhatsApp Image 2025-05-02 at 19.06.36_7fbfca8a.jpg', 0)       # Image where we want to detect the watch
+
+# Initiate ORB detector
+orb = cv2.ORB_create()
+
+# Find the keypoints and descriptors with ORB
+kp1, des1 = orb.detectAndCompute(img1, None)
+kp2, des2 = orb.detectAndCompute(img2, None)
+
+# Create BFMatcher object
+bf = cv2.BFMatcher(cv2.NORM_HAMMING, crossCheck=True)
+
+# Match descriptors
+matches = bf.match(des1, des2)
+
+# Sort matches by distance
+matches = sorted(matches, key=lambda x: x.distance)
+
+# Draw top matches
+img_matches = cv2.drawMatches(img1, kp1, img2, kp2, matches[:20], None, flags=2)
+
+cv2.imshow("Matches", img_matches)
+cv2.waitKey(0)
+cv2.destroyAllWindows()
