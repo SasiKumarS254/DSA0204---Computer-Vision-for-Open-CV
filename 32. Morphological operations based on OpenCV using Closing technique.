@@ -1,0 +1,24 @@
+import cv2
+import numpy as np
+
+# Load the image in grayscale
+image = cv2.imread(r'R:\Whats Up\WhatsApp Image 2025-05-02 at 18.22.37_ea1e846a.jpg', cv2.IMREAD_GRAYSCALE)
+if image is None:
+    print("Error: Could not load image.")
+    exit()
+
+# Threshold to binary
+_, binary = cv2.threshold(image, 127, 255, cv2.THRESH_BINARY)
+
+# Define the structuring element (kernel)
+kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (5, 5))  # You can adjust size/shape
+
+# Apply morphological closing
+closed = cv2.morphologyEx(binary, cv2.MORPH_CLOSE, kernel)
+
+# Display the images
+cv2.imshow("Original (Binary)", binary)
+cv2.imshow("Closed Image", closed)
+
+cv2.waitKey(0)
+cv2.destroyAllWindows()
