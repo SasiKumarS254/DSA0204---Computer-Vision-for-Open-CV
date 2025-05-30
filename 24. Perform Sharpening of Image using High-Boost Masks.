@@ -1,0 +1,30 @@
+import cv2
+import numpy as np
+
+# Load image (grayscale or color)
+image = cv2.imread(r'R:\Whats Up\WhatsApp Image 2025-05-02 at 18.22.37_ea1e846a.jpg')
+if image is None:
+    print("Error: Could not load image.")
+    exit()
+
+# Convert to float for precision
+image_float = np.float32(image)
+
+# Apply Gaussian blur
+blurred = cv2.GaussianBlur(image_float, (5, 5), 1.0)
+
+# Set high-boost factor (A > 1)
+A = 1.8  # Try values like 1.5 to 2.5
+
+# Apply high-boost filter: HighBoost = A*Original - Blurred
+high_boost = cv2.subtract(A * image_float, blurred)
+
+# Clip and convert back to uint8
+high_boost = np.clip(high_boost, 0, 255).astype(np.uint8)
+
+# Display results
+cv2.imshow("Original Image", image)
+cv2.imshow("High-Boost Sharpened", high_boost)
+
+cv2.waitKey(0)
+cv2.destroyAllWindows()
